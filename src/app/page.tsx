@@ -248,49 +248,64 @@ const Page = () => {
           I&apos;ve chosen a modern stack focusing on performance, SEO optimization, and mobile first approach.
         </p>
 
-        {/* Frontend part */}
-        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-6 items-center ">
+        {/* Frontend and Backend tools combined */}
+        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-6 items-center">
           {tools.forntend.map((tool, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
-              <a href={tool.link} target="_blank" rel="noopener noreferrer" className="w-24 h-24 bg-white rounded-lg p-2">
+            <div key={`frontend-${index}`} className="flex flex-col items-center gap-2">
+              <a
+                href={tool.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-24 h-24 bg-white rounded-lg p-2 flex items-center justify-center"
+              >
                 <Image
                   src={"/tools" + tool.icon}
                   alt={tool.name}
-                  width={24}
-                  height={24}
-                  className="w-full h-full"
+                  width={80}
+                  height={80}
+                  loading="eager"
+                  priority={index < 5} // Prioritize first 5 images
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain"
+                  }}
                 />
               </a>
-              <p className="text-neutral-400">
+              <p className="text-neutral-400 text-sm">
                 {tool.name}
               </p>
             </div>
           ))}
 
           {tools.backend.map((tool, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
-              <a href={tool.link} target="_blank" rel="noopener noreferrer" className="w-24 h-24 bg-white rounded-lg p-2">
+            <div key={`backend-${index}`} className="flex flex-col items-center gap-2">
+              <a
+                href={tool.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-24 h-24 bg-white rounded-lg p-2 flex items-center justify-center"
+              >
                 <Image
                   src={"/tools" + tool.icon}
                   alt={tool.name}
-                  width={24}
-                  height={24}
-                  className="w-full h-full"
+                  width={80}
+                  height={80}
+                  loading="eager"
+                  priority={index < 5} // Prioritize first 5 images
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain"
+                  }}
                 />
               </a>
-              <p className="text-neutral-400">
+              <p className="text-neutral-400 text-sm">
                 {tool.name}
               </p>
             </div>
           ))}
-
         </div>
-
-        {/* backend part */}
-        {/* <div className="grid grid-cols-2 lg:grid-cols-5 md:grid-cols-3 gap-4 items-center">
-                    
-                </div> */}
-
       </section>
 
       <section id="special" className="px-6 lg:px-64 py-16 flex flex-col items-center text-center gap-8">
