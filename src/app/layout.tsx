@@ -25,9 +25,20 @@ export const metadata: Metadata = {
     shortcut: ["/icons/apple-touch-icon.png"],
   },
   openGraph: {
-    // url:
-    type: "website",
-    images: [`${process.env.NEXT_PUBLIC_BASE_URL}/icons/navlogo.png`],
+    title: 'Rflect: A Simple chat app',
+    description: 'Developed By Pritam Mondal',
+    url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    siteName: 'Rflect',
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/og-logo.png`, // Absolute URL is important for social media
+        width: 1200,
+        height: 630,
+        alt: 'Rflect Logo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
   },
 };
 export default function RootLayout({
