@@ -96,9 +96,10 @@ const Page = () => {
     <div className="relative bg-[#1f2736] text-white min-h-screen overflow-x-hidden">
 
       {/* Fixed Navbar */}
-      <div className="fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-72 py-4 backdrop-blur-md bg-[#030a17] z-50 border-b border-white/10">
-        <a href="#" className="text-xl font-bold cursor-pointer"><Navlogo size={100} /></a>
-
+      <div className="fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-72 py-4 backdrop-blur-md bg-[#030a17] z-50 border-b border-white/10 h-16">
+        <a href="#" className="text-xl font-bold cursor-pointer flex items-center">
+          <Navlogo size={100} />
+        </a>
 
         {/* Desktop Links */}
         <div className="md:flex items-center gap-6 text-sm lg:text-base hidden md:pointer-events-auto">
@@ -108,24 +109,19 @@ const Page = () => {
         </div>
 
         <div className="flex items-center gap-2">
-
           <a href={user ? "/chat" : "/register"}>
-            {/* <Button variant="outline" className="bg-primary cursor-pointer rounded-full">
-              {user ? "Go to Chat" : "Sign Up"}
-            </Button> */}
-            <button className="border bg-[#353535]/30 shadow-xs  hover:text-[#fafafa] dark:bg-input/30 dark:border-[#353535] hover:bg-[#353535]/50 px-4 py-1 rounded-full cursor-pointer">
+            <button className="border bg-[#353535]/30 shadow-xs hover:text-[#fafafa] dark:bg-input/30 dark:border-[#353535] hover:bg-[#353535]/50 px-4 py-1 rounded-full cursor-pointer whitespace-nowrap">
               {user ? "Go to Chat" : "Sign Up"}
             </button>
           </a>
 
           {/* Hamburger on Mobile */}
           <div className="md:hidden">
-            <Button aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>
+            <Button aria-label="Open sidebar" onClick={() => setSidebarOpen(true)} className="w-10 h-10 p-2">
               <Menu className="w-6 h-6" />
             </Button>
           </div>
         </div>
-
       </div>
 
       {/* Sidebar */}
