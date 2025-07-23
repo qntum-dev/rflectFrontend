@@ -79,8 +79,8 @@ export function NewChatDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div className="bg-primary cursor-pointer rounded-md p-2" title="New Chat ">
-                    <MessageSquareDiff className="text-sidebar" size={24} />
+                <div className="bg-white cursor-pointer rounded-md p-2" title="New Chat ">
+                    <MessageSquareDiff className="text-black" size={24} />
                 </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] bg-secondary">

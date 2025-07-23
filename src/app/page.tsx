@@ -4,6 +4,7 @@ import { useAuthStore } from "@/components/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import Image from "next/image";
+import Navlogo from "@/components/navlogo";
 
 const Page = () => {
   const { user } = useAuthStore();
@@ -95,8 +96,9 @@ const Page = () => {
     <div className="relative bg-[#1f2736] text-white min-h-screen overflow-x-hidden">
 
       {/* Fixed Navbar */}
-      <div className="fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-64 py-4 backdrop-blur-md bg-[#030a17] z-50 border-b border-white/10">
-        <a href="#" className="text-xl font-bold cursor-pointer">Rflect</a>
+      <div className="fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-72 py-4 backdrop-blur-md bg-[#030a17] z-50 border-b border-white/10">
+        {/* <a href="#" className="text-xl font-bold cursor-pointer">Rflect</a> */}
+        <Navlogo size={100} />
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6 text-sm lg:text-base">

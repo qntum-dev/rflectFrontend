@@ -13,6 +13,7 @@ import { NewChatDialog } from "./new-chat-dialog";
 import ChatList from "../chat/ChatList";
 import { useTheme } from "next-themes";
 import ProfileDialog from "./profile-dialog";
+import Navlogo from "../navlogo";
 
 export function ChatSidebar() {
     const user = useAuthStore((state) => state.user);
@@ -27,13 +28,15 @@ export function ChatSidebar() {
     return (
         <Sidebar>
 
-            <SidebarHeader>
-                <div className="flex justify-between items-center w-full mt-8">
-                    <h1 className="text-2xl">Rflect</h1>
+            <SidebarHeader className="bg-[#030a17] pt-4">
+                <div className="flex justify-between items-center w-full ">
+                    {/* <h1 className="text-2xl text-white">Rflect</h1> */}
+                    <Navlogo size={100} />
+
                     <NewChatDialog />
                 </div>
             </SidebarHeader>
-            <SidebarContent className="mx-2 lg:mx-4 mt-3">
+            <SidebarContent className="">
                 <ChatList />
 
             </SidebarContent>

@@ -39,7 +39,7 @@ const ConversationCard = ({ chat }: { chat: ChatData }) => {
                     setOpenMobile(false);
                 }
             }}
-            className={`flex items-start py-4 px-6 justify-between cursor-pointer rounded-lg transition-colors ${activeChat?.chat_id === chat.chat_id
+            className={`flex items-start py-4 px-4 justify-between cursor-pointer rounded-lg transition-colors ${activeChat?.chat_id === chat.chat_id
                 ? 'bg-[#092458] text-white'
                 : 'hover:bg-secondary'
                 }`}

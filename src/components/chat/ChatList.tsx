@@ -123,7 +123,7 @@ const ChatList = () => {
 
 
     return (
-        <div className="flex flex-col overflow-y-auto custom-scrollbar pr-2 gap-2">
+        <div className="flex flex-col overflow-y-auto custom-scrollbar gap-2 pt-2 px-2">
             {isLoading ? (
                 <div className="p-4 text-gray-500">Loading chats...</div>
             ) : error ? (
