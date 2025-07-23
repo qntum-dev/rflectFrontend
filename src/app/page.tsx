@@ -97,11 +97,11 @@ const Page = () => {
 
       {/* Fixed Navbar */}
       <div className="fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-72 py-4 backdrop-blur-md bg-[#030a17] z-50 border-b border-white/10">
-        {/* <a href="#" className="text-xl font-bold cursor-pointer">Rflect</a> */}
-        <Navlogo size={100} />
+        <a href="#" className="text-xl font-bold cursor-pointer"><Navlogo size={100} /></a>
+
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-6 text-sm lg:text-base">
+        <div className="md:flex items-center gap-6 text-sm lg:text-base hidden md:pointer-events-auto">
           <a href="https://www.linkedin.com/in/pritammondal-dev/" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">About Me</a>
           <a href="#techstack" className="hover:text-white/70 transition-colors">Tech Stack</a>
           <a target="_blank" href="https://wa.me/916291258816" className="hover:text-white/70 transition-colors">Contact</a>
