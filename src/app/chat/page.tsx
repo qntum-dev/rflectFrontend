@@ -22,14 +22,14 @@ const Page = () => {
         ) : (
             <ChatClientProvider url={process.env.NEXT_PUBLIC_CHAT_URL!} userID={user!.id}>
 
-                <div className="flex h-dvh w-full bg-card items-center">
+                <div className="flex h-dvh w-full bg-card items-center justify-center">
                     <ChatSidebar />
 
-                    <div className="flex-1 ml-4 h-full">
+                    <div className="flex-1 h-full">
                         {activeChat ? (
                             <CurrentChatNew key={activeChat.chat_id} chat={activeChat} />
                         ) : (
-                            <div className="flex flex-col items-center justify-center gap-4">
+                            <div className="flex flex-col h-full items-center justify-center gap-4">
 
                                 <div className="text-gray-500">
                                     Select a chat to start messaging
