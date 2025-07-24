@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const page = () => {
 
     return (
-        <div className="h-dvh flex items-center justify-center">
+        <div className="h-dvh w-full  flex items-center justify-center">
             <LoginForm />
         </div>
     );
