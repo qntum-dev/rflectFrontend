@@ -4,10 +4,12 @@ export const metadata: Metadata = {
     title: 'Verify your account',
     description: 'Verify your account on Rflect',
 }
-const page = () => {
+
+export default async function Page() {
+
+
     return (
         <VerifyPage />
     );
 }
 
-export default page;

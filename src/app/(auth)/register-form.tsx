@@ -46,7 +46,7 @@ export default function RegisterForm() {
                 const user = result.data?.userData
                 if (user) {
                     login({ user })
-                    router.push("/verify")
+                    router.push("/verify/new")
                 } else {
                     form.setError("root", {
                         message: "Registration failed: Invalid server response",

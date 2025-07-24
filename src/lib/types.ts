@@ -49,6 +49,23 @@ export const otpSchema = z.object({
 })
 export type OTPSchemaType = z.infer<typeof otpSchema>
 
+//Forgot Password Schema
+
+export const forgetFormSchema = z.object({
+    email: z.string().email("enter a valid email address")
+})
+export type ForgetFormSchemaType = z.infer<typeof forgetFormSchema>
+
+
+export const resetFormSchema = z.object({
+    otp: z.string().min(6, {
+        message: "Your one-time password must be 6 characters.",
+    }),
+    email: z.string().email("enter a valid email address"),
+    new_password: passwordField
+})
+export type ResetFormSchemaType = z.infer<typeof resetFormSchema>
+
 
 
 // API Response Type

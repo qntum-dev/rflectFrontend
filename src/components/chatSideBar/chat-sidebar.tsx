@@ -28,10 +28,12 @@ export function ChatSidebar() {
     return (
         <Sidebar>
 
-            <SidebarHeader className="bg-[#030a17] pt-4">
-                <div className="flex justify-between items-center w-full ">
+            <SidebarHeader className="bg-[#030a17] ">
+                <div className="flex justify-between items-center w-full">
                     {/* <h1 className="text-2xl text-white">Rflect</h1> */}
-                    <Navlogo size={100} />
+                    <Navlogo size={72} />
+                    {/* <a href="#" className="text-xl font-bold cursor-pointer flex items-center">
+                    </a> */}
 
                     <NewChatDialog />
                 </div>

@@ -1,7 +1,7 @@
 "use server"
 
 import { apiHandler } from "@/lib/api-handler";
-import { ApiResponse, AuthResponse, PublicUser } from "@/lib/types"
+import { ApiResponse, AuthResponse, ForgetFormSchemaType, PublicUser, ResetFormSchemaType } from "@/lib/types"
 import { LoginSchemaType, OTPSchemaType, RegisterSchemaType } from "@/lib/types";
 
 // interface SuccessResponse {
@@ -72,9 +72,31 @@ export const sendACVerification = async (): Promise<sendOTPStatus> => {
     }
 }
 
+export const sendForgetPasswordOTP = async (forgetData: ForgetFormSchemaType): Promise<sendOTPStatus> => {
+
+    const { success, data, error } = await apiHandler<unknown, { status: string }>("/otp/sendResetOTP", forgetData, "post")
+
+    return {
+        success,
+        data,
+        error
+    }
+}
+
 export const VerifyOTP = async (otpData: OTPSchemaType): Promise<sendOTPStatus> => {
 
     const { success, data, error } = await apiHandler<OTPSchemaType, { status: string }>("/otp/verify-email", otpData, "post")
+
+    return {
+        success,
+        data,
+        error
+    }
+}
+
+export const verifyForgotPassword = async (otpData: ResetFormSchemaType): Promise<sendOTPStatus> => {
+
+    const { success, data, error } = await apiHandler<ResetFormSchemaType, { status: string }>("/otp/verify-forgot-password", otpData, "post")
 
     return {
         success,

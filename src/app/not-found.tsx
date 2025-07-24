@@ -6,7 +6,7 @@ export default function NotFound() {
     const { theme } = useTheme();
     const bg = `bg-${theme === 'dark' ? 'secondary' : 'white'}`
     return (
-        <div className={`${bg} min-h-screen flex flex-col items-center justify-center`}>
+        <div className={`${bg} min-h-screen flex flex-col items-center justify-center`} suppressHydrationWarning>
             {/* <h2>Not Found</h2>
       <p>Could not find requested resource</p>
       <Link href="/">Return Home</Link> */}
@@ -17,7 +17,7 @@ export default function NotFound() {
                 </NotFoundComponent>
 
                 <div className="cursor-pointer text-lg">
-                    <a className="text-blue-600" href={"/home"}>
+                    <a className="text-blue-600" href={"/"}>
                         Return to Home
                     </a>
                 </div>
