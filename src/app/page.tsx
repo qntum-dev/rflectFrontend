@@ -205,7 +205,7 @@ const Page = () => {
           <div className="rounded-2xl overflow-hidden hidden md:block shadow-2xl w-full h-auto">
 
             <Image
-              src="https://res.cloudinary.com/qntum/image/upload/v1753363969/Screenshot_1364_xfopvp.png"
+              src="https://res.cloudinary.com/qntum/image/upload/v1753366843/Screenshot_2025-07-24_195021_jhh2o5.png"
               alt="Rflect Chat UI"
               width={1200}
               height={500}

@@ -31,7 +31,7 @@ export function ChatSidebar() {
             <SidebarHeader className="bg-[#030a17] ">
                 <div className="flex justify-between items-center w-full">
                     {/* <h1 className="text-2xl text-white">Rflect</h1> */}
-                    <Navlogo size={72} />
+                    <Navlogo size={100} />
                     {/* <a href="#" className="text-xl font-bold cursor-pointer flex items-center">
                     </a> */}
 
