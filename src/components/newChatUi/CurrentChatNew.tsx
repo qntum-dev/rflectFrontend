@@ -185,7 +185,7 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full w-full">
             <ActiveChatHeaderCard />
 
             <div className="flex-1 overflow-hidden h-[70dvh] w-full rounded mb-4 relative custom-scrollbar">

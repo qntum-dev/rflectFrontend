@@ -22,7 +22,7 @@ const Page = () => {
         ) : (
             <ChatClientProvider url={process.env.NEXT_PUBLIC_CHAT_URL!} userID={user!.id}>
 
-                <div className="flex h-screen w-full">
+                <div className="flex h-screen w-full bg-card">
                     <ChatSidebar />
 
                     <div className="w-full flex flex-col items-center justify-center ">

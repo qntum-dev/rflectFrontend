@@ -224,7 +224,7 @@ const Page = () => {
           </div>
           <div className="md:hidden rounded-2xl overflow-hidden shadow-2xl h-full w-auto">
             <Image
-              src="/chat_ui_mobile.webp"
+              src={"https://res.cloudinary.com/qntum/image/upload/v1753363831/WhatsApp_Image_2025-07-24_at_4.51.29_PM_bvcruo.jpg"}
               alt="Rflect Chat UI Mobile"
               width={164}    // aspect-correct width
               height={300}   // desired display height
