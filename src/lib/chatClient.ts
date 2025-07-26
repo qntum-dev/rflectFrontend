@@ -16,7 +16,7 @@ export const Local: BaseURL = process.env.NEXT_PUBLIC_CHAT_URL!
  * Environment returns a BaseURL for calling the cloud environment with the given name.
  */
 export function Environment(name: string): BaseURL {
-    return `https://${name}-hcf4w.encr.app`
+    return process.env.NEXT_PUBLIC_CHAT_URL!
 }
 
 /**

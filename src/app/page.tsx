@@ -24,22 +24,22 @@ const Page = () => {
   const friends = [
     {
       name: "Priyangsu Banik",
-      image: "https://res.cloudinary.com/qntum/image/upload/v1753288766/profile_images/profile_images/36512c88-a85b-4f38-b3fe-ec1ce54ffb55-LMixPV.jpg",
+      image: "https://res.cloudinary.com/qntum/image/upload/v1753533077/36512c88-a85b-4f38-b3fe-ec1ce54ffb55-LMixPV_ik5dxg.jpg",
       link: "https://priyangsubanik.in/",
     },
     {
       name: "Sayandeep Dhani",
-      image: "https://res.cloudinary.com/qntum/image/upload/v1753294429/profile_images/profile_images/be3fdcf6-45ed-496b-8dad-86e7a1544ea6-ohnUPm.jpg",
+      image: "https://res.cloudinary.com/qntum/image/upload/v1753533139/be3fdcf6-45ed-496b-8dad-86e7a1544ea6-ohnUPm_t1pf5u.jpg",
       link: "https://www.linkedin.com/in/sayandeep-dhani-70a04a273/",
     },
     {
       name: "Rahul Krishnan",
-      image: "https://res.cloudinary.com/qntum/image/upload/v1753291822/profile_images/profile_images/8bebdd20-f602-4c96-b350-301284a76716-626nXf.jpg",
+      image: "https://res.cloudinary.com/qntum/image/upload/v1753533172/8bebdd20-f602-4c96-b350-301284a76716-626nXf_pk6viv.jpg",
       link: "https://www.linkedin.com/in/rahul-krishnan-dev/",
     },
     {
       name: "Shriyans Mukherjee",
-      image: "https://res.cloudinary.com/qntum/image/upload/v1753333633/profile_images/profile_images/77641655-d8ab-4611-93ac-f07c1a49cc94-lk68zn.jpg",
+      image: "https://res.cloudinary.com/qntum/image/upload/v1753533209/77641655-d8ab-4611-93ac-f07c1a49cc94-lk68zn_eei2s5.jpg",
       link: "https://portfolio-six-mocha-83.vercel.app/",
     },
     // add more as needed
@@ -238,7 +238,7 @@ const Page = () => {
           <div className="rounded-2xl overflow-hidden hidden md:block shadow-2xl w-full h-auto">
 
             <Image
-              src="https://res.cloudinary.com/qntum/image/upload/v1753373774/Screenshot_2025-07-24_214520_ybdh27.png"
+              src="https://res.cloudinary.com/qntum/image/upload/v1753533282/Screenshot_2025-07-24_214520_ybdh27_ehpwur.png"
               alt="Rflect Chat UI"
               width={1200}
               height={500}
@@ -257,7 +257,7 @@ const Page = () => {
           </div>
           <div className="md:hidden rounded-2xl overflow-hidden shadow-2xl h-full w-auto">
             <Image
-              src={"https://res.cloudinary.com/qntum/image/upload/v1753363831/WhatsApp_Image_2025-07-24_at_4.51.29_PM_bvcruo.jpg"}
+              src={"https://res.cloudinary.com/qntum/image/upload/v1753533319/WhatsApp_Image_2025-07-24_at_4.51.29_PM_bvcruo_wkg3ci.jpg"}
               alt="Rflect Chat UI Mobile"
               width={164}    // aspect-correct width
               height={300}   // desired display height
@@ -345,7 +345,7 @@ const Page = () => {
         </p>
         <div className="w-full  rounded-xl overflow-hidden shadow-lg">
           <Image
-            src="https://res.cloudinary.com/qntum/image/upload/v1753369052/Screenshot_2025-07-24_202714_lianaf.png"
+            src="https://res.cloudinary.com/qntum/image/upload/v1753533358/Screenshot_2025-07-24_202714_lianaf_fxvmss.png"
             alt="Encore.dev Screenshot"
             width={1200}
             height={700}
