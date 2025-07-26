@@ -85,8 +85,8 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                         const newPages = [...oldData.pages];
 
                         // Prevent duplicates by checking message ID
-                        const isDuplicate = newPages[0]?.some(
-                            (msg) => msg.id === incoming.id
+                        const isDuplicate = newPages.some((page) =>
+                            page.some((msg) => msg.id === incoming.id)
                         );
 
                         if (isDuplicate) {
