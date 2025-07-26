@@ -10,6 +10,21 @@ import { uploadProfileImg } from "@/app/actions/profile-actions";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "./stores/auth-store";
 import { DialogTitle } from "./ui/dialog";
+import imageCompression from "browser-image-compression";
+
+function blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const result = reader.result as string;
+            const base64 = result.split(",")[1]; // remove data:image/jpeg;base64,
+            resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}
+
 
 const ChooseProfileImg = ({ type, setOpen }: { type: "new" | "existing", setOpen?: Dispatch<SetStateAction<boolean>> }) => {
     const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -39,24 +54,66 @@ const ChooseProfileImg = ({ type, setOpen }: { type: "new" | "existing", setOpen
         }
     };
 
+    // const handleUpload = async () => {
+    //     if (!imageSrc || !croppedAreaPixels) return;
+    //     setError(null);
+
+    //     try {
+    //         const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
+    //         const base64String = await blobToBase64(croppedBlob);
+
+    //         const file = new File([croppedBlob], "profile.jpg", { type: "image/jpeg" });
+    //         const formData = new FormData();
+    //         formData.append("file", file);
+
+    //         startTransition(async () => {
+    //             const res = await uploadProfileImg({ base64: base64String });
+    //             if (!res.success) {
+    //                 setError(res.error || "Upload failed");
+    //                 return;
+    //             }
+    //             setUploadedUrl(res.data?.url ?? null);
+    //             updateUser({ profileImgUrl: res.data?.url ?? null }); // Update user state with new profile image
+    //         });
+    //     } catch (err) {
+    //         console.error(err);
+    //         setError("Upload failed. Please try again.");
+    //     }
+    // };
+
     const handleUpload = async () => {
         if (!imageSrc || !croppedAreaPixels) return;
         setError(null);
 
         try {
             const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-            const file = new File([croppedBlob], "profile.jpg", { type: "image/jpeg" });
-            const formData = new FormData();
-            formData.append("file", file);
+
+            // Convert blob to file
+            const croppedFile = new File([croppedBlob], "profile.jpg", {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+            });
+
+            // Compress file
+            const compressedBlob = await imageCompression(croppedFile, {
+                maxSizeMB: 0.5, // adjust as needed
+                maxWidthOrHeight: 512,
+                useWebWorker: true,
+            });
+
+            // Convert to base64
+            const base64String = await blobToBase64(compressedBlob);
 
             startTransition(async () => {
-                const res = await uploadProfileImg(formData);
+                const res = await uploadProfileImg({ base64: base64String });
+
                 if (!res.success) {
                     setError(res.error || "Upload failed");
                     return;
                 }
+
                 setUploadedUrl(res.data?.url ?? null);
-                updateUser({ profileImgUrl: res.data?.url ?? null }); // Update user state with new profile image
+                updateUser({ profileImgUrl: res.data?.url ?? null });
             });
         } catch (err) {
             console.error(err);

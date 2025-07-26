@@ -2,27 +2,42 @@
 
 import { apiHandler } from "@/lib/api-handler";
 
-export const uploadProfileImg = async (formData: FormData) => {
-    const file = formData.get("file") as File;
-    if (!file) {
-        return { success: false, error: "No file provided" };
-    }
+// export const uploadProfileImg = async (formData: FormData) => {
+//     const file = formData.get("file") as File;
+//     if (!file) {
+//         return { success: false, error: "No file provided" };
+//     }
 
-    const arrayBuffer = await file.arrayBuffer();
-    const base64String = Buffer.from(arrayBuffer).toString("base64");
+//     const arrayBuffer = await file.arrayBuffer();
+//     const base64String = Buffer.from(arrayBuffer).toString("base64");
+
+//     const res = await apiHandler<{ base64: string }, { url: string }>(
+//         "/media/uploadProfileImage",
+//         { base64: base64String },
+//         "post"
+//     );
+
+//     if (!res.success || !res.data) {
+//         return { success: false, error: res.error || "Upload failed." };
+//     }
+
+//     // Optional: revalidate user data here
+//     // revalidatePath("/settings"); 
+
+//     return { success: true, data: res.data };
+// };
+
+// actions/profile-actions.ts
+
+export async function uploadProfileImg(data: { base64: string }) {
+
 
     const res = await apiHandler<{ base64: string }, { url: string }>(
         "/media/uploadProfileImage",
-        { base64: base64String },
+        { base64: data.base64 },
         "post"
     );
 
-    if (!res.success || !res.data) {
-        return { success: false, error: res.error || "Upload failed." };
-    }
 
-    // Optional: revalidate user data here
-    // revalidatePath("/settings"); 
-
-    return { success: true, data: res.data };
-};
+    return res;
+}

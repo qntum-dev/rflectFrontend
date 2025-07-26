@@ -53,7 +53,7 @@ export default function VerifyOTPForm() {
 
     }
     return (
-        <div className="h-dvh flex items-center justify-center bg-gray-950 w-full">
+        <div className="h-dvh flex items-center justify-center bg-gray-950 lg:w-full">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 border border-black p-4 rounded-md bg-gray-900">
                     <h1 className="text-xl font-bold">Verify your account</h1>

@@ -28,7 +28,7 @@ const VerifyPage = () => {
     }
 
     return (
-        <div className="h-dvh flex items-center justify-center bg-gray-950">
+        <div className="h-dvh w-full flex items-center justify-center bg-gray-950">
 
             {showVerifyOTPForm
                 ?
