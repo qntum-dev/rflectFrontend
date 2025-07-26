@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, Dispatch, SetStateAction, useState } from 'react';
+import React, { useRef, useEffect, Dispatch, SetStateAction, useState, useCallback } from 'react';
 import { SendHorizonal } from 'lucide-react';
 
 const ChatInputBox = ({
@@ -13,76 +13,101 @@ const ChatInputBox = ({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [bottomInset, setBottomInset] = useState(0);
-    useEffect(() => {
+    const isKeyboardOpenRef = useRef(false); // Track keyboard state
+
+    // Function to resize the textarea
+    const resizeTextarea = useCallback(() => {
         const textarea = textareaRef.current;
         if (textarea) {
-            textarea.readOnly = true;
-            textarea.focus();
-            textarea.readOnly = false;
-        }
-    }, []);
-    // Visual viewport listener to adjust padding when keyboard opens
-    useEffect(() => {
-
-        const vv = window.visualViewport;
-        if (vv) {
-
-            const handleViewportResize = () => {
-                const heightDiff = vv.height < window.innerHeight ? window.innerHeight - vv.height : 0;
-                setBottomInset(heightDiff);
-            };
-
-            vv.addEventListener('resize', handleViewportResize);
-            vv.addEventListener('scroll', handleViewportResize);
-
-            return () => {
-                vv.removeEventListener('resize', handleViewportResize);
-                vv.removeEventListener('scroll', handleViewportResize);
-            };
-        }
-
-    }, []);
-
-    const resizeTextarea = () => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-            textarea.style.height = '40px';
+            textarea.style.height = '40px'; // Reset to min height
             const scrollHeight = textarea.scrollHeight;
             const maxHeight = 200;
             textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
             textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
         }
-    };
+    }, []);
+
+    // Effect for initial focus and textarea resize on mount
+    useEffect(() => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.focus();
+            resizeTextarea(); // Initial resize
+        }
+    }, [resizeTextarea]);
+
+    // Visual viewport listener to adjust padding when keyboard opens
+    useEffect(() => {
+        const vv = window.visualViewport;
+        if (vv) {
+            const handleViewportChange = () => {
+                const heightDiff = window.innerHeight - vv.height;
+                // Consider a small threshold for height difference to account for browser UI or subtle changes
+                // If heightDiff is significant, keyboard is likely open
+                if (heightDiff > 100) { // Arbitrary threshold, adjust if needed
+                    setBottomInset(heightDiff);
+                    isKeyboardOpenRef.current = true;
+                } else {
+                    setBottomInset(0); // Keyboard is closed or nearly closed
+                    isKeyboardOpenRef.current = false;
+                }
+            };
+
+            // Using 'resize' is usually sufficient for keyboard detection
+            vv.addEventListener('resize', handleViewportChange);
+
+            return () => {
+                vv.removeEventListener('resize', handleViewportChange);
+            };
+        }
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setNewMessage(e.target.value);
-        resizeTextarea();
+        // resizeTextarea will be called via useEffect on newMessage change
+    };
+
+    // New function to handle sending message and keeping focus
+    const handleSendMessageAndKeepFocus = () => {
+        if (newMessage.trim() === '') {
+            return; // Prevent sending empty messages
+        }
+        handleSendMessage();
+        // Immediately refocus and resize after sending
+        // Use a slight delay if refocusing causes issues with input clearing,
+        // but typically direct focus works best.
+        if (textareaRef.current) {
+            textareaRef.current.focus();
+            resizeTextarea(); // Ensure textarea resizes correctly after clearing content
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSendMessage();
+            handleSendMessageAndKeepFocus();
         }
     };
 
+    // Effect to resize textarea whenever newMessage changes
     useEffect(() => {
         resizeTextarea();
-    }, [newMessage]);
+    }, [newMessage, resizeTextarea]);
 
     const handleFocus = () => {
-        textareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Only scroll into view if the keyboard is not already detected as open
+        // This prevents unnecessary scrolling when the keyboard is already up
+        if (!isKeyboardOpenRef.current && textareaRef.current) {
+            textareaRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     };
 
     return (
         <div
             ref={containerRef}
-            className="flex flex-col justify-between "
+            className="flex flex-col justify-between"
             style={{ paddingBottom: bottomInset }}
         >
-            {/* Chat Messages */}
-
-
             {/* Input */}
             <div className="border-t bg-secondary">
                 <div className="p-2 lg:p-4">
@@ -117,9 +142,11 @@ const ChatInputBox = ({
                             )}
                         </div>
                         <button
-                            onClick={handleSendMessage}
+                            onClick={handleSendMessageAndKeepFocus}
                             className="ml-2 bg-[#0a2259] hover:bg-[#0a1e4d] text-white p-2 rounded-full transition-colors cursor-pointer flex-shrink-0"
                             title="Send Message"
+                            // Disable button if message is empty to prevent sending empty messages
+                            disabled={newMessage.trim() === ''}
                         >
                             <SendHorizonal size={24} />
                         </button>
