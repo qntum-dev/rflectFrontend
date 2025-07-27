@@ -145,13 +145,34 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
     }, [chatClient, chat.chat_id, handleIncomingMessage, user]);
 
     const handleSendMessage = async () => {
-        if (!newMessage.trim() || !dmClient) return;
+        if (!newMessage.trim()) return;
 
         const messageContent = newMessage;
         setNewMessage('');
 
         try {
-            await dmClient.send({ message: messageContent });
+            // Check if socket is still open before sending
+            if (!dmClient || dmClient.socket.ws.readyState >= WebSocket.CLOSING) {
+                console.warn("WebSocket is closed. Reinitializing...");
+
+                const newDmClient = await chatClient!.newChat.privateChat({
+                    chatID: chat.chat_id,
+                    userID: user!.id,
+                });
+
+                setDmClient(newDmClient);
+                dmClientRef.current = newDmClient;
+
+                newDmClient.socket.on("message", handleIncomingMessage);
+
+                // Wait for the socket to be open
+                await new Promise((resolve) => {
+                    newDmClient.socket.ws.addEventListener("open", resolve, { once: true });
+                });
+            }
+
+            await dmClientRef.current!.send({ message: messageContent });
+
             chatListClient?.send({
                 chat_id: chat.chat_id,
                 latestMessage: messageContent,
@@ -160,7 +181,6 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                 receiverName: chat.receiverName,
             });
 
-            // Force scroll after DOM is updated
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     virtuosoRef.current?.scrollToIndex({
@@ -173,6 +193,7 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
             console.error('Failed to send message:', error);
         }
     };
+
 
     const handleAtBottomStateChange = (atBottom: boolean) => {
         setIsNearBottom(atBottom);
