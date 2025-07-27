@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Message, ChatData } from '@/lib/types';
 import { useChatMessages } from '@/app/hooks/chat';
@@ -19,81 +19,20 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
     const virtuosoRef = useRef<VirtuosoHandle>(null);
     const [isNearBottom, setIsNearBottom] = useState(true);
     const [hasNewMessages, setHasNewMessages] = useState(false);
-
     const isNearBottomRef = useRef(true);
-    useEffect(() => {
-        isNearBottomRef.current = isNearBottom;
-    }, [isNearBottom]);
 
     const queryClient = useQueryClient();
     const { chatClient, chatListClient } = useChatClient();
     const isInitialLoadRef = useRef(true);
     const chatIdRef = useRef(chat.chat_id);
-    const latestHandlerRef = useRef<null | ((e: { data: string }) => void)>(null);
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isSuccess } = useChatMessages(chat.chat_id);
-
     const messages = useMemo(() => {
         const allMessages = data?.pages.flatMap(page => page) || [];
         return allMessages
             .filter(Boolean)
             .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
     }, [data]);
-
-
-    const handleIncomingMessage = useCallback(
-        (event: { data: string }) => {
-            try {
-                const incoming: Message = JSON.parse(event.data);
-                console.log('Received message:', incoming);
-
-                queryClient.setQueryData(
-                    ['chatMessages', chat.chat_id],
-                    (oldData: InfiniteData<Message[], unknown> | undefined) => {
-                        if (!oldData) {
-                            return {
-                                pages: [[incoming]],
-                                pageParams: [Date.now()],
-                            } satisfies InfiniteData<Message[], unknown>;
-                        }
-
-                        const newPages = [...oldData.pages];
-
-                        // Prevent duplicates by checking message ID
-                        const isDuplicate = newPages.some((page) =>
-                            page.some((msg) => msg.id === incoming.id)
-                        );
-
-                        if (isDuplicate) {
-                            console.log('Duplicate incoming message ignored:', incoming.id);
-                            return oldData;
-                        }
-
-                        newPages[0] = [...newPages[0], incoming];
-
-                        return {
-                            ...oldData,
-                            pages: newPages,
-                        } satisfies InfiniteData<Message[], unknown>;
-                    }
-                );
-
-                if (isNearBottom) {
-                    setTimeout(() => {
-                        virtuosoRef.current?.scrollTo({
-                            top: 999999,
-                            behavior: 'smooth',
-                        });
-                    }, 100);
-                } else {
-                    setHasNewMessages(true);
-                }
-            } catch (error) {
-                console.error('Failed to parse incoming message:', error);
-            }
-        },
-        [chat.chat_id, queryClient, isNearBottom]
-    );
 
     useEffect(() => {
         if (chatIdRef.current !== chat.chat_id) {
@@ -106,27 +45,39 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
 
     useEffect(() => {
         if (isSuccess && messages.length > 0 && isInitialLoadRef.current) {
-            setTimeout(() => {
-                virtuosoRef.current?.scrollTo({ top: 999999, behavior: 'auto' });
-                isInitialLoadRef.current = false;
-            }, 50);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    virtuosoRef.current?.scrollToIndex({
+                        index: messages.length - 1,
+                        behavior: 'auto',
+                    });
+                    isInitialLoadRef.current = false;
+                });
+            });
         }
     }, [isSuccess, messages.length]);
 
     useEffect(() => {
         if (!isInitialLoadRef.current && messages.length > 0 && isNearBottom) {
-            setTimeout(() => {
-                virtuosoRef.current?.scrollTo({ top: 999999, behavior: 'smooth' });
-            }, 100);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    virtuosoRef.current?.scrollToIndex({
+                        index: messages.length - 1,
+                        behavior: 'smooth',
+                    });
+                });
+            });
         }
     }, [messages.length, isNearBottom]);
 
-    // ✅ Message handling logic is stable across re-renders
     useEffect(() => {
-        latestHandlerRef.current = (event: { data: string }) => {
+        isNearBottomRef.current = isNearBottom;
+    }, [isNearBottom]);
+
+    const handleIncomingMessage = useCallback(
+        (event: { data: string }) => {
             try {
                 const incoming: Message = JSON.parse(event.data);
-                console.log('📩 Incoming message:', incoming);
 
                 queryClient.setQueryData(
                     ['chatMessages', chat.chat_id],
@@ -139,14 +90,8 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                         }
 
                         const newPages = [...oldData.pages];
-                        const isDuplicate = newPages.some((page) =>
-                            page.some((msg) => msg.id === incoming.id)
-                        );
-
-                        if (isDuplicate) {
-                            console.log('⚠️ Duplicate message skipped:', incoming.id);
-                            return oldData;
-                        }
+                        const isDuplicate = newPages[0]?.some((msg) => msg.id === incoming.id);
+                        if (isDuplicate) return oldData;
 
                         newPages[0] = [...newPages[0], incoming];
 
@@ -158,32 +103,34 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                 );
 
                 if (isNearBottomRef.current) {
-                    setTimeout(() => {
-                        virtuosoRef.current?.scrollTo({ top: 999999, behavior: 'smooth' });
-                    }, 100);
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            virtuosoRef.current?.scrollToIndex({
+                                index: messages.length,
+                                behavior: 'smooth',
+                            });
+                        });
+                    });
                 } else {
                     setHasNewMessages(true);
                 }
             } catch (error) {
-                console.error('❌ Error parsing incoming message:', error);
+                console.error('Failed to parse incoming message:', error);
             }
-        };
-    }, [chat.chat_id, queryClient]);
+        },
+        [chat.chat_id, queryClient, messages.length]
+    );
 
-    // ✅ Socket setup using latest handler
+
     useEffect(() => {
         if (!chatClient || !chat.chat_id) return;
 
         const initializeDM = async () => {
             try {
                 const dmClientInstance = await chatClient.newChat.privateChat({ chatID: chat.chat_id, userID: user!.id });
-
                 setDmClient(dmClientInstance);
                 dmClientRef.current = dmClientInstance;
-
-                latestHandlerRef.current = handleIncomingMessage; // store reference
-
-                dmClientInstance.socket.on('message', latestHandlerRef.current);
+                dmClientInstance.socket.on('message', handleIncomingMessage);
             } catch (error) {
                 console.error('Failed to initialize DM:', error);
             }
@@ -192,23 +139,16 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
         initializeDM();
 
         return () => {
-            if (dmClientRef.current?.socket && latestHandlerRef.current) {
-                dmClientRef.current.socket.off('message', latestHandlerRef.current);
-                dmClientRef.current.socket.close();
-            }
+            dmClientRef.current?.socket?.off('message', handleIncomingMessage);
+            dmClientRef.current?.socket?.close();
         };
     }, [chatClient, chat.chat_id, handleIncomingMessage, user]);
-
 
     const handleSendMessage = async () => {
         if (!newMessage.trim() || !dmClient) return;
 
         const messageContent = newMessage;
         setNewMessage('');
-
-        setTimeout(() => {
-            virtuosoRef.current?.scrollTo({ top: 999999, behavior: 'smooth' });
-        }, 100);
 
         try {
             await dmClient.send({ message: messageContent });
@@ -218,6 +158,16 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                 latestMessageTime: Date.now(),
                 receiverId: chat.receiverId,
                 receiverName: chat.receiverName,
+            });
+
+            // Force scroll after DOM is updated
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    virtuosoRef.current?.scrollToIndex({
+                        index: messages.length + 1,
+                        behavior: 'smooth',
+                    });
+                });
             });
         } catch (error) {
             console.error('Failed to send message:', error);
@@ -230,13 +180,14 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
     };
 
     const scrollToBottom = () => {
-        virtuosoRef.current?.scrollTo({ top: 999999, behavior: 'smooth' });
+        virtuosoRef.current?.scrollToIndex({ index: messages.length - 1, behavior: 'smooth' });
         setHasNewMessages(false);
     };
 
     return (
-        <div className="flex flex-col w-full h-full">
+        <div className="flex flex-col w-full h-full overflow-hidden">
             <ActiveChatHeaderCard />
+
             <div className="flex-1 overflow-hidden h-[70dvh] w-full rounded mb-4 relative">
                 <Virtuoso
                     ref={virtuosoRef}
@@ -247,7 +198,7 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                         }
                     }}
                     atBottomStateChange={handleAtBottomStateChange}
-                    followOutput="smooth"
+                    followOutput={isNearBottom ? 'smooth' : false}
                     components={{
                         List: ({ children, ...props }) => (
                             <div
@@ -265,19 +216,40 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                         ),
                     }}
                     itemContent={(index, message) => {
-                        if (!message || typeof message !== 'object') return null;
+                        if (!message || typeof message !== 'object') {
+                            return (
+                                <div className="px-2 py-1">
+                                    <div className="px-4 py-2 bg-gray-100 text-gray-500 rounded text-sm">
+                                        Loading message...
+                                    </div>
+                                </div>
+                            );
+                        }
+                        if (!('senderId' in message) || !('content' in message)) {
+                            return (
+                                <div className="px-2 py-1">
+                                    <div className="px-4 py-2 bg-red-100 text-red-500 rounded text-sm">
+                                        Invalid message format
+                                    </div>
+                                </div>
+                            );
+                        }
 
                         const isCurrentUser = message.senderId !== chat.receiverId;
                         return (
                             <div key={message.id} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} w-full px-2 py-1`}>
-                                <div className={`px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm ${isCurrentUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
-                                    <div>{message.content}</div>
+                                <div
+                                    className={`px-4 py-2 rounded-2xl max-w-[80%] break-words text-sm ${isCurrentUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+                                >
+                                    <div>{message.content || ''}</div>
                                     <div className="mt-1 text-right text-xs opacity-70">
-                                        {new Date(message.timestamp).toLocaleTimeString([], {
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: true,
-                                        })}
+                                        {message.timestamp
+                                            ? new Date(message.timestamp).toLocaleTimeString([], {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                hour12: true,
+                                            })
+                                            : ''}
                                     </div>
                                 </div>
                             </div>
@@ -286,6 +258,7 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                     style={{ height: '100%', width: '100%' }}
                     className="bg-white dark:bg-neutral-900 rounded"
                 />
+
                 {hasNewMessages && (
                     <button
                         onClick={scrollToBottom}
@@ -294,12 +267,14 @@ const CurrentChatNew = ({ chat }: { chat: ChatData }) => {
                         New messages ↓
                     </button>
                 )}
+
                 {isFetchingNextPage && (
                     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded text-sm">
                         Loading older messages...
                     </div>
                 )}
             </div>
+
             <ChatInputBox
                 newMessage={newMessage}
                 setNewMessage={setNewMessage}
