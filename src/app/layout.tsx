@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Rflect: A Simple chat app",
+  verification: {
+    google: "KVnCHb14GucXqPhD3mlORl2n8SAwfXi4uUwF9NYuIqY"
+  },
   description:
     "Developed By Pritam Mondal",
 
