@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useAuthStore } from "@/components/stores/auth-store";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Github, Linkedin, Mail, Menu, X } from "lucide-react";
+import { ArrowUpRight, Github, Globe, Linkedin, Mail, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Navlogo from "@/components/navlogo";
 
@@ -125,7 +125,7 @@ const Page = () => {
 
         {/* Desktop Links */}
         <div className="md:flex items-center gap-6 text-sm lg:text-base hidden md:pointer-events-auto">
-          <a href="https://www.linkedin.com/in/pritammondal-dev/" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">About Me</a>
+          <a href="https://pritammondal.dev" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">About Me</a>
           <a href="#techstack" className="hover:text-white/70 transition-colors">Tech Stack</a>
           <a href="https://github.com/qntum-dev/rflect" className="hover:text-white/70 transition-colors" target="_blank">Code Repo</a>
           <a target="_blank" href="https://wa.me/916291258816" className="hover:text-white/70 transition-colors">Contact Me</a>
@@ -393,7 +393,7 @@ const Page = () => {
             {/* Main content */}
             <div className="text-center space-y-4">
               <div className="flex items-center justify-center gap-2 text-lg font-medium">
-                <span>Developed by by Pritam Mondal</span>
+                <span>Developed by by <a href="https://pritammondal.dev" className="underline" target="_blank" rel="noopener noreferrer">Pritam Mondal</a></span>
               </div>
               <p className="text-footer-foreground/70 max-w-md">
                 Passionate developer who loves building stuffs
@@ -403,15 +403,13 @@ const Page = () => {
             {/* Social links */}
             <div className="flex items-center gap-6">
               <a
-                href="https://github.com/qntum-dev"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="https://pritammondal.dev"
                 className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-footer-foreground/5 hover:bg-footer-accent/10 border border-footer-border hover:border-footer-accent/30 transition-all duration-300"
-                aria-label="Visit GitHub profile"
+                aria-label="Visit My Website"
               >
-                <Github className="h-5 w-5 text-footer-foreground/70 group-hover:text-footer-accent transition-colors" />
+                <Globe className="h-5 w-5 text-footer-foreground/70 group-hover:text-footer-accent transition-colors" />
                 <span className="text-sm font-medium text-footer-foreground/70 group-hover:text-footer-accent transition-colors">
-                  GitHub
+                  My Website
                 </span>
               </a>
 
@@ -429,6 +427,21 @@ const Page = () => {
               </a>
 
               <a
+                href="https://github.com/qntum-dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-footer-foreground/5 hover:bg-footer-accent/10 border border-footer-border hover:border-footer-accent/30 transition-all duration-300"
+                aria-label="Visit GitHub profile"
+              >
+                <Github className="h-5 w-5 text-footer-foreground/70 group-hover:text-footer-accent transition-colors" />
+                <span className="text-sm font-medium text-footer-foreground/70 group-hover:text-footer-accent transition-colors">
+                  GitHub
+                </span>
+              </a>
+
+
+
+              <a
                 href="mailto:pritammondal.dev@gmail.com"
                 className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-footer-foreground/5 hover:bg-footer-accent/10 border border-footer-border hover:border-footer-accent/30 transition-all duration-300"
                 aria-label="Send email"
@@ -438,6 +451,8 @@ const Page = () => {
                   Email
                 </span>
               </a>
+
+
             </div>
 
             {/* Copyright */}
